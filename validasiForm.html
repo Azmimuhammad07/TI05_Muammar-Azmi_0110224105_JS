@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validasi Keberangkatan Pesawat</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .form-group input.error {
+            border-color: red;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .success {
+            color: green;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Form Validasi Keberangkatan</h1>
+        <form id="flightForm">
+            <div class="form-group">
+                <label for="name">Nama Pelanggan:</label>
+                <input type="text" id="name" name="name" placeholder="Masukan Nama Anda">
+                <div class="error-message" id="nameError"></div>
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" placeholder="Masukan Email Anda">
+                <div class="error-message" id="emailError"></div>
+            </div>
+            <div class="form-group">
+                <label for="time">Jam Keberangkatan:</label>
+                <input type="text" id="time" name="time" placeholder="Masukan Jam Keberangkatan">
+                <div class="error-message" id="timeError"></div>
+            </div>
+            <div class="form-group">
+                <label for="destination">Tujuan Keberangkatan:</label>
+                <input type="text" id="destination" name="destination" placeholder="Masukan Tujuan Keberangkatan">
+                <div class="error-message" id="destinationError"></div>
+            </div>
+            <div class="form-group">
+                <label for="tickets">Jumlah Tiket:</label>
+                <input type="number" id="tickets" name="tickets" placeholder="Masukan Jumlah Tiket">
+                <div class="error-message" id="ticketsError"></div>
+            </div>
+            <button type="submit">Submit</button>
+        </form>
+        <div class="success" id="output"></div>
+    </div>
+
+    <script>
+        // Deklarasi elemen input dan error
+        let nama = document.getElementById('name');
+        let email = document.getElementById('email');
+        let jam_keberangkatan = document.getElementById('time');
+        let tujuan_keberangkatan = document.getElementById('destination');
+        let jumlah_tiket = document.getElementById('tickets');
+
+        let nama_error = document.getElementById('nameError');
+        let email_error = document.getElementById('emailError');
+        let jam_keberangkatan_error = document.getElementById('timeError');
+        let tujuan_keberangkatan_error = document.getElementById('destinationError');
+        let jumlah_tiket_error = document.getElementById('ticketsError');
+
+        // Fungsi validasi input
+        function requiredInput() {
+            let isValid = true;
+
+            // Validasi Nama
+            if (nama.value.trim() === '') {
+                nama_error.textContent = 'Nama harus diisi.';
+                nama.classList.add('error');
+                isValid = false;
+            } else if (nama.value.length > 30) {
+                nama_error.textContent = 'Nama maksimal 30 karakter.';
+                nama.classList.add('error');
+                isValid = false;
+            } else {
+                nama_error.textContent = '';
+                nama.classList.remove('error');
+            }
+
+            // Validasi Email
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (email.value.trim() === '') {
+                email_error.textContent = 'Email harus diisi.';
+                email.classList.add('error');
+                isValid = false;
+            } else if (!emailPattern.test(email.value)) {
+                email_error.textContent = 'Format email tidak valid.';
+                email.classList.add('error');
+                isValid = false;
+            } else {
+                email_error.textContent = '';
+                email.classList.remove('error');
+            }
+
+            // Validasi Jam Keberangkatan
+            const timePattern = /^([01]\d|2[0-3]):([0-5]\d)$/;
+            if (jam_keberangkatan.value.trim() === '') {
+                jam_keberangkatan_error.textContent = 'Jam keberangkatan harus diisi.';
+                jam_keberangkatan.classList.add('error');
+                isValid = false;
+            } else if (!timePattern.test(jam_keberangkatan.value)) {
+                jam_keberangkatan_error.textContent = 'Format jam harus HH:mm (00:00-23:59).';
+                jam_keberangkatan.classList.add('error');
+                isValid = false;
+            } else {
+                jam_keberangkatan_error.textContent = '';
+                jam_keberangkatan.classList.remove('error');
+            }
+
+            // Validasi Tujuan Keberangkatan
+            if (tujuan_keberangkatan.value.trim() === '') {
+                tujuan_keberangkatan_error.textContent = 'Tujuan keberangkatan harus diisi.';
+                tujuan_keberangkatan.classList.add('error');
+                isValid = false;
+            } else {
+                tujuan_keberangkatan_error.textContent = '';
+                tujuan_keberangkatan.classList.remove('error');
+            }
+
+            // Validasi Jumlah Tiket
+            const ticketValue = parseInt(jumlah_tiket.value, 10);
+            if (jumlah_tiket.value.trim() === '') {
+                jumlah_tiket_error.textContent = 'Jumlah tiket harus diisi.';
+                jumlah_tiket.classList.add('error');
+                isValid = false;
+            } else if (isNaN(ticketValue) || ticketValue < 1 || ticketValue > 10) {
+                jumlah_tiket_error.textContent = 'Jumlah tiket harus antara 1-10.';
+                jumlah_tiket.classList.add('error');
+                isValid = false;
+            } else {
+                jumlah_tiket_error.textContent = '';
+                jumlah_tiket.classList.remove('error');
+            }
+
+            return isValid;
+        }
+
+        // Event listener untuk submit form
+        const form = document.getElementById('flightForm');
+        const output = document.getElementById('output');
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            if (requiredInput()) {
+                output.innerHTML = `
+                    <p><strong>Nama Pelanggan:</strong> ${nama.value}</p>
+                    <p><strong>Email:</strong> ${email.value}</p>
+                    <p><strong>Jam Keberangkatan:</strong> ${jam_keberangkatan.value}</p>
+                    <p><strong>Tujuan Keberangkatan:</strong> ${tujuan_keberangkatan.value}</p>
+                    <p><strong>Jumlah Tiket:</strong> ${jumlah_tiket.value}</p>
+                `;
+                form.reset();
+            }
+        });
+    </script>
+</body>
+</html>
